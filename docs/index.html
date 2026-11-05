@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AI News Summarizer：使用 Python、uv、Ollama 與 Qwen2.5，在本機將新聞整理成繁體中文摘要。">
+  <meta name="color-scheme" content="dark">
+  <title>AI News Summarizer｜讓新聞，留下重點</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至主要內容</a>
+  <header class="site-header wrap">
+    <a class="brand" href="#"><span class="brand-icon" aria-hidden="true">N<span>›</span></span>AI News Summarizer</a>
+    <nav aria-label="主要導覽">
+      <a href="#demo">摘要示範</a>
+      <a href="#architecture">技術架構</a>
+      <a href="#start">開始使用 <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>本機 AI · 繁體中文 · 命令列工具</p>
+        <h1 id="hero-title">讓新聞，<br>留下<span class="accent">重點。</span></h1>
+        <p class="lead">從一段長文，到清楚的理解。<br>貼上新聞，讓本機 AI 整理標題、三個重點，<br class="desktop-break">以及 100 字以內的繁體中文摘要。</p>
+        <div class="actions">
+          <a class="button primary" href="#start">在本機開始 <span aria-hidden="true">↗</span></a>
+          <a class="button secondary" href="https://github.com/Ycc1519/ai-news-summarizer">查看 GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="hero-note">模型下載完成後，即可透過本機 Ollama 產生摘要。</p>
+      </div>
+      <div class="terminal" aria-label="命令列靜態展示">
+        <div class="terminal-bar"><span aria-hidden="true">● ● ●</span><span>本機執行 / 靜態展示</span></div>
+        <div class="terminal-body">
+          <p class="command"><span>$</span> uv run ai-news-summarizer</p>
+          <p class="muted">請貼上新聞內容，完成後輸入<br>單獨一行 /end：</p>
+          <p>把複雜的資訊，整理成容易閱讀的重點。</p>
+          <p class="accent">/end</p>
+          <div class="terminal-result">
+            <p class="tiny-label">輸出內容</p>
+            <p><span class="accent">01</span> 一個清楚的新聞標題</p>
+            <p><span class="accent">02</span> 三個值得掌握的重點</p>
+            <p><span class="accent">03</span> 100 字以內的精簡摘要</p>
+          </div>
+          <p class="muted terminal-foot">Python + uv + Ollama + Qwen2.5</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="features wrap" aria-label="主要功能">
+      <article><span class="feature-number">01 / 輸入</span><h2>貼上，就能開始</h2><p>支援多行新聞與空白行，不需準備特定檔案格式。輸入 /end，交給模型整理。</p></article>
+      <article><span class="feature-number">02 / 整理</span><h2>把資訊變得清楚</h2><p>以繁體中文呈現標題、三個重點與短摘要，並檢查輸出格式及摘要長度。</p></article>
+      <article><span class="feature-number">03 / 本機</span><h2>在自己的電腦執行</h2><p>透過本機 Ollama 呼叫 Qwen2.5，不需雲端 API 金鑰，可自行指定已下載模型。</p></article>
+    </section>
+
+    <section id="demo" class="section wrap" aria-labelledby="demo-title">
+      <div class="section-heading"><div><p class="eyebrow">閱讀前後 / DEMO</p><h2 id="demo-title">一則新聞，快速掌握。</h2></div><span class="badge">靜態展示 · 非即時生成</span></div>
+      <p class="section-intro">以下為虛構新聞與預先撰寫的摘要，僅示範輸出形式；本頁不會呼叫模型。</p>
+      <div class="demo-grid">
+        <article class="news-panel"><div class="panel-label"><span>輸入 / 示範新聞</span><span>虛構內容</span></div><h3>城市圖書館試辦 AI 館藏搜尋</h3><p>某城市圖書館宣布，下月起在兩間分館試辦人工智慧館藏搜尋服務。讀者可用日常語言描述想閱讀的主題，由系統推薦館內書籍，並顯示推薦理由。</p><p>試辦為期三個月，期間仍保留原有的關鍵字搜尋與館員諮詢服務。圖書館將蒐集使用者回饋，評估推薦的準確度與使用便利性，再決定是否擴大到其他分館。目前尚未公布全面上線日期。</p><div class="source-note">示例素材，並非真實新聞報導。</div></article>
+        <article class="summary-panel"><div class="panel-label"><span><span class="status-dot" aria-hidden="true"></span>輸出 / 摘要結果</span><span>繁體中文</span></div><h3>圖書館試辦 AI 搜書，三個月後評估擴大</h3><ol class="points"><li>兩間分館下月起試辦 AI 搜尋，可用日常語言尋找館藏。</li><li>試辦三個月，保留關鍵字搜尋及館員諮詢。</li><li>依回饋評估準確度與便利性，尚無全面上線日期。</li></ol><div class="summary-text"><h4>100 字以內摘要</h4><p>城市圖書館將在兩間分館試辦 AI 館藏搜尋三個月，支援自然語言查詢，並保留既有服務。後續將依使用者回饋評估是否擴大，尚未公布全面上線日期。</p></div></article>
+      </div>
+      <p class="caption">實際摘要由本機模型產生，內容可能有誤，請對照原文確認。</p>
+    </section>
+
+    <section id="architecture" class="section architecture" aria-labelledby="architecture-title">
+      <div class="wrap"><p class="eyebrow">簡單的工具，清楚的流程 / STACK</p><h2 id="architecture-title">從終端機，到本機模型。</h2><p class="section-intro">uv 管理環境，Python 處理輸入與輸出；Ollama 負責執行 Qwen2.5。</p>
+        <div class="stack-grid">
+          <article><span class="stack-symbol" aria-hidden="true">&gt;_</span><h3>Python</h3><p>讀取新聞、建立請求，檢查並顯示摘要結果。</p><span class="stack-detail">命令列程式 · Python 3.12+</span></article>
+          <article><span class="stack-symbol" aria-hidden="true">uv</span><h3>uv</h3><p>建立專案環境、同步套件，並執行程式與測試。</p><span class="stack-detail">環境與專案管理</span></article>
+          <article><span class="stack-symbol" aria-hidden="true">◎</span><h3>Ollama</h3><p>提供本機 HTTP API，接收新聞並呼叫指定模型。</p><span class="stack-detail">localhost:11434</span></article>
+          <article><span class="stack-symbol" aria-hidden="true">✳</span><h3>Qwen2.5</h3><p>依提示詞整理新聞，產生繁體中文結構化摘要。</p><span class="stack-detail">預設 qwen2.5:3b</span></article>
+        </div>
+        <p class="flow"><span>貼上新聞</span><span aria-hidden="true">→</span><span>Python CLI</span><span aria-hidden="true">→</span><span>Ollama / Qwen2.5</span><span aria-hidden="true">→</span><span>繁體中文摘要</span></p>
+      </div>
+    </section>
+
+    <section id="start" class="section wrap" aria-labelledby="start-title">
+      <div class="section-heading"><div><p class="eyebrow">準備好你的第一份摘要 / QUICK START</p><h2 id="start-title">三步，在本機開始。</h2></div><a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer#readme">完整 README <span aria-hidden="true">↗</span></a></div>
+      <p class="section-intro">先安裝 Python 3.12 以上、uv 與 Ollama，再下載或 clone GitHub 專案，於專案目錄執行以下指令。</p>
+      <div class="steps">
+        <article><span class="step-number">01</span><div><h3>同步環境，下載模型</h3><p>首次下載模型需要網路及磁碟空間。</p><pre><code>uv sync
+ollama pull qwen2.5:3b</code></pre></div></article>
+        <article><span class="step-number">02</span><div><h3>啟動 Ollama 與摘要工具</h3><p>開啟 Ollama 應用程式，或在另一個終端機執行 <code>ollama serve</code>，再啟動工具。</p><pre><code>uv run ai-news-summarizer</code></pre></div></article>
+        <article><span class="step-number">03</span><div><h3>貼上新聞，以 /end 結束</h3><p>可貼上多行文字。輸入單獨一行 <code>/end</code> 並按 Enter，等待摘要完成。</p><pre><code>在這裡貼上你的新聞內容……
+/end</code></pre></div></article>
+      </div>
+      <aside class="help-note"><strong>遇到問題？</strong> 無法連線時，請確認 Ollama 已啟動；找不到模型時，執行 <code>ollama list</code> 確認，並依提示下載模型。也可用 <code>--model</code> 指定其他已下載的本機模型。</aside>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer"><div><a class="brand" href="#">AI News Summarizer</a><p>讀懂新聞，從重點開始。</p></div><div><a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer">GitHub Repository ↗</a><p>靜態專案展示 · 實際摘要請在本機執行</p></div></footer>
+</body>
+</html>

@@ -29,6 +29,10 @@ class SummarizerTests(unittest.TestCase):
         self.assertEqual(payload["model"], "test-model")
         self.assertEqual(payload["prompt"], "新聞內容")
         self.assertFalse(payload["stream"])
+        self.assertEqual(payload["options"]["temperature"], 0)
+        self.assertEqual(payload["format"]["required"], ["title", "points", "summary"])
+        self.assertEqual(payload["format"]["properties"]["points"]["maxItems"], 3)
+        self.assertEqual(payload["format"]["properties"]["summary"]["maxLength"], 100)
         self.assertEqual(request.full_url, "http://localhost:11434/api/generate")
 
     @patch("ai_news_summarizer.urlopen")
@@ -41,6 +45,7 @@ class SummarizerTests(unittest.TestCase):
     def test_connection_error(self, urlopen):
         with self.assertRaisesRegex(ValueError, "ollama serve"):
             summarize("新聞")
+        self.assertEqual(urlopen.call_count, 1)
 
     @patch("ai_news_summarizer.urlopen", side_effect=TimeoutError)
     def test_timeout(self, urlopen):
@@ -62,13 +67,52 @@ class SummarizerTests(unittest.TestCase):
             {**VALID_RESULT, "summary": "字" * 101},
             {**VALID_RESULT, "title": ""},
             {**VALID_RESULT, "points": ["一", "二", 3]},
+            {**VALID_RESULT, "points": ["一", "二", " "]},
+            {**VALID_RESULT, "summary": " "},
             {},
+            [],
+            None,
         ]
         for result in cases:
             with self.subTest(result=result):
-                urlopen.return_value = mock_response(result)
+                urlopen.side_effect = [mock_response(result), mock_response(result)]
                 with self.assertRaisesRegex(ValueError, "格式不符"):
                     summarize("新聞")
+
+    @patch("ai_news_summarizer.urlopen")
+    def test_retries_invalid_result_once(self, urlopen):
+        urlopen.side_effect = [
+            mock_response({**VALID_RESULT, "summary": "字" * 101}),
+            mock_response(VALID_RESULT),
+        ]
+        self.assertEqual(summarize("原始新聞"), VALID_RESULT)
+        self.assertEqual(urlopen.call_count, 2)
+        first = json.loads(urlopen.call_args_list[0].args[0].data)
+        second = json.loads(urlopen.call_args_list[1].args[0].data)
+        self.assertEqual(first["prompt"], second["prompt"])
+        self.assertNotEqual(first["system"], second["system"])
+
+    @patch("ai_news_summarizer.urlopen")
+    def test_stops_after_second_invalid_result(self, urlopen):
+        urlopen.side_effect = [mock_response({}), mock_response({})]
+        with self.assertRaisesRegex(ValueError, "已自動重試一次"):
+            summarize("新聞")
+        self.assertEqual(urlopen.call_count, 2)
+
+    @patch("ai_news_summarizer.urlopen")
+    def test_summary_exactly_100_characters(self, urlopen):
+        result = {**VALID_RESULT, "summary": "字" * 100}
+        urlopen.return_value = mock_response(result)
+        self.assertEqual(summarize("新聞"), result)
+        self.assertEqual(urlopen.call_count, 1)
+
+    @patch("ai_news_summarizer.urlopen")
+    def test_retries_invalid_model_json(self, urlopen):
+        urlopen.side_effect = [
+            io.BytesIO(json.dumps({"response": "not json"}).encode()),
+            mock_response(VALID_RESULT),
+        ]
+        self.assertEqual(summarize("新聞"), VALID_RESULT)
 
     @patch("ai_news_summarizer.urlopen")
     def test_invalid_json(self, urlopen):
