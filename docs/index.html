@@ -78,19 +78,52 @@
     </section>
 
     <section id="start" class="section wrap" aria-labelledby="start-title">
-      <div class="section-heading"><div><p class="eyebrow">準備好你的第一份摘要 / QUICK START</p><h2 id="start-title">三步，在本機開始。</h2></div><a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer#readme">完整 README <span aria-hidden="true">↗</span></a></div>
-      <p class="section-intro">先安裝 Python 3.12 以上、uv 與 Ollama，再下載或 clone GitHub 專案，於專案目錄執行以下指令。</p>
+      <div class="section-heading"><div><p class="eyebrow">準備好你的第一份摘要 / QUICK START</p><h2 id="start-title">四步，在本機開始。</h2></div><a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer#readme">完整 README <span aria-hidden="true">↗</span></a></div>
+      <p class="section-intro">先安裝 Python 3.12 以上、uv 與 Ollama，再將專案下載到自己的電腦。以下指令請在終端機執行。</p>
       <div class="steps">
-        <article><span class="step-number">01</span><div><h3>同步環境，下載模型</h3><p>首次下載模型需要網路及磁碟空間。</p><pre><code>uv sync
+        <article><span class="step-number">01</span><div><h3>下載專案，進入專案目錄</h3><p>若已安裝 Git，可複製以下兩行指令：</p><pre><code>git clone https://github.com/Ycc1519/ai-news-summarizer.git
+cd ai-news-summarizer</code></pre><p>沒有 Git 也可以：到 <a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer">GitHub Repository</a> 選擇 <strong>Code → Download ZIP</strong>，或<a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer/archive/refs/heads/main.zip">直接下載 ZIP 檔案包</a>。解壓縮後，在終端機進入 <code>ai-news-summarizer-main</code> 資料夾，再繼續下一步。兩種下載方式擇一即可。</p></div></article>
+        <article><span class="step-number">02</span><div><h3>同步環境，下載模型</h3><p>請確認目前位於含有 <code>pyproject.toml</code> 的專案目錄。首次下載模型需要網路及磁碟空間。</p><pre><code>uv sync
 ollama pull qwen2.5:3b</code></pre></div></article>
-        <article><span class="step-number">02</span><div><h3>啟動 Ollama 與摘要工具</h3><p>開啟 Ollama 應用程式，或在另一個終端機執行 <code>ollama serve</code>，再啟動工具。</p><pre><code>uv run ai-news-summarizer</code></pre></div></article>
-        <article><span class="step-number">03</span><div><h3>貼上新聞，以 /end 結束</h3><p>可貼上多行文字。輸入單獨一行 <code>/end</code> 並按 Enter，等待摘要完成。</p><pre><code>在這裡貼上你的新聞內容……
+        <article><span class="step-number">03</span><div><h3>啟動 Ollama 與摘要工具</h3><p>開啟 Ollama 應用程式，或在另一個終端機執行 <code>ollama serve</code>，再啟動工具。</p><pre><code>uv run ai-news-summarizer</code></pre></div></article>
+        <article><span class="step-number">04</span><div><h3>貼上新聞，以 /end 結束</h3><p>可貼上多行文字。輸入單獨一行 <code>/end</code> 並按 Enter，等待摘要完成。</p><pre><code>在這裡貼上你的新聞內容……
 /end</code></pre></div></article>
       </div>
       <aside class="help-note"><strong>遇到問題？</strong> 無法連線時，請確認 Ollama 已啟動；找不到模型時，執行 <code>ollama list</code> 確認，並依提示下載模型。也可用 <code>--model</code> 指定其他已下載的本機模型。</aside>
     </section>
+    <section id="ai-usage" class="section wrap" aria-labelledby="ai-usage-title">
+      <p class="eyebrow">開發過程與驗證 / AI COLLABORATION</p>
+      <h2 id="ai-usage-title">AI 使用說明</h2>
+      <p class="section-intro">本專案由開發者提出需求、指定技術及回報問題，並由 Codex 協助實作與驗證。以下說明 AI 參與的範圍與實際修正紀錄。</p>
+      <div class="steps">
+        <article>
+          <span class="step-number">01</span>
+          <div>
+            <h3>用了什麼工具、用在哪裡？</h3>
+            <p>Codex 協助撰寫 Python 摘要工具、錯誤處理、mock 測試、GitHub Actions、README 與這個靜態網站，也協助查找並修正執行問題。Ollama 負責在本機執行 Qwen2.5，實際新聞摘要預設由 <code>qwen2.5:3b</code> 產生。</p>
+          </div>
+        </article>
+        <article>
+          <span class="step-number">02</span>
+          <div>
+            <h3>開發者參與及修正了什麼？</h3>
+            <p>開發者指定本機模型與簡單的命令列操作，回報 Actions 失敗，並要求實際執行、修復及檢查金鑰管理。Codex 依此修正 Action 版本、本機套件匯入問題，並加入環境檔忽略規則。</p>
+            <p>實測曾出現把「下月」改成「三月」及格式不符的回覆，因此加入 JSON 格式約束、降低隨機性、強化日期與數字提示，並在格式錯誤時最多重試一次。</p>
+          </div>
+        </article>
+        <article>
+          <span class="step-number">03</span>
+          <div>
+            <h3>如何驗證、還有哪些限制？</h3>
+            <p>Codex 依開發者要求執行 13 個 mock 測試，全部通過；也用本機 Qwen2.5 實際產生摘要，修正後的該次輸出保留了「下月」與「兩間分館」。GitHub 測試、Pages 自動部署及公開網址也已查核成功。這些檢查由 Codex 執行，不代表開發者已逐項親自操作。</p>
+            <p>本頁的虛構新聞與靜態摘要由 Codex 協助撰寫，並非保存的真實模型輸出。格式通過仍不保證事實正確，使用者需對照原文確認日期、數字與推論。</p>
+          </div>
+        </article>
+      </div>
+      <a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer#ai-使用說明">查看 README 完整 AI 使用說明 <span aria-hidden="true">↗</span></a>
+    </section>
   </main>
 
-  <footer class="wrap site-footer"><div><a class="brand" href="#">AI News Summarizer</a><p>讀懂新聞，從重點開始。</p></div><div><a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer">GitHub Repository ↗</a><p>靜態專案展示 · 實際摘要請在本機執行</p></div></footer>
+  <footer class="wrap site-footer"><div><a class="brand" href="#">AI News Summarizer</a><p>讀懂新聞，從重點開始。</p></div><div><a class="text-link" href="https://github.com/Ycc1519/ai-news-summarizer">GitHub Repository ↗</a><p><a href="#ai-usage">AI 使用說明</a> · 靜態專案展示 · 實際摘要請在本機執行</p></div></footer>
 </body>
 </html>

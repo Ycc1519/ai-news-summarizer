@@ -106,3 +106,34 @@ Ollama 呼叫格式參考[官方 Generate API 文件](https://docs.ollama.com/ap
 預期網站網址為 <https://Ycc1519.github.io/ai-news-summarizer/>；實際部署狀態與網址以 Pages 設定頁為準。之後推送 `main` 分支中的 `docs/` 更新，GitHub Pages 就會重新部署。此設定不需修改既有的 `.github/workflows/tests.yml`。
 
 部署操作參考 [GitHub Pages 官方說明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
+
+## AI 使用說明
+
+### 使用的工具與用途
+
+| 工具 | 使用位置與用途 |
+| --- | --- |
+| Codex | 協助撰寫及修改 Python 命令列程式、Ollama 呼叫、錯誤處理、mock 測試、GitHub Actions 設定、README 與靜態作品頁，並協助執行檢查及排除錯誤。 |
+| Ollama | 在本機提供模型執行環境，接收 Python 程式送出的新聞內容。 |
+| Qwen2.5（預設 `qwen2.5:3b`） | 產生繁體中文新聞標題、三個重點及 100 字以內的摘要。 |
+
+### 開發者參與及修正過程
+
+我負責提出新聞摘要的需求、指定使用 Python／uv 與本機模型、要求保持初學者可理解的實作，並回報 GitHub Actions 失敗、要求實際執行及修復問題。程式、測試與網頁由 Codex 協助實作，並非全部由我手寫。
+
+依實際執行結果，本專案在 Codex 協助下完成以下修正：
+
+- 發現 Actions 引用的 `setup-uv` 版本無法解析後修正設定，並查核測試及 Pages 部署紀錄。
+- 查明本機 `.venv` 的 `.pth` 檔帶有隱藏旗標，造成套件匯入失敗；修復本機環境並確認標準執行指令可用。
+- 發現模型曾把原文「下月」寫成「三月」，以及回覆格式不符，因此加入 JSON Schema、降低隨機性、強化保留日期與數字的提示，並對格式錯誤最多自動重試一次。
+- 檢查敏感資訊，並加入 `.env` 與 `.env.*` 的 Git 忽略規則。
+
+### 已完成的驗證與限制
+
+以下檢查由 Codex 依我的要求執行，不代表我已逐項親自操作：
+
+- 執行 `uv run python -m unittest discover -s tests -v`，13 個 mock 測試通過，涵蓋正常回應、連線錯誤、模型不存在、格式錯誤、重試次數及摘要長度邊界。
+- 將作品頁的虛構新聞送入本機 Ollama／Qwen2.5，確認命令列可成功產生摘要；修正後的該次輸出保留了「下月」及「兩間分館」。
+- 查核 GitHub Actions 的測試與 Pages 自動部署成功紀錄，並確認公開作品頁可存取。
+
+測試通過及格式正確不代表內容一定正確；日期、數字、名稱及推論仍需對照原文。作品頁的示範新聞與摘要由 Codex 協助撰寫，明確標示為靜態、虛構示例，並非保存的真實模型輸出。後續親自修改或驗證的內容，應依實際操作補充，不將 AI 代為執行的工作列為個人操作成果。
